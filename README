@@ -1,0 +1,5 @@
+A tiny unassuming MVC framework built from the ground up but highly inspired by CodeIgniter from Ellis Labs. The goal is to be as Drag-And-Drop as possible, with as easy to configure options as can be to hit the ground running.
+
+The goal is simply to be simple, includes a few basic plugins, assistants and a basic loader to get going with
+
+This project is open, if you think you have a great idea or something to contribute, please by all means fork and push!
