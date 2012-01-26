@@ -1,12 +1,26 @@
 <?php
 class load {
 	
+	
+	public static function inc($dirs, $path) {
+		foreach($dirs as $dir) {
+			$file = $Config->DocRoot.$dir.$path.".php";
+			if(file_exists($file)) {
+				include_once($file);
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	/**
 	 * Loads a file that contains a plugin (a class that contains a deal of isolated functionality)
 	 * @param unknown_type $name
 	 */
 	public static function plugin($name) {
-		
+		global $Config;
+		if(load::inc($Config->Plugins, $name)) return true;
+		else return false;
 	}
 	
 	/**
@@ -14,7 +28,9 @@ class load {
 	 * @param unknown_type $name
 	 */
 	public static function assistant($name) {
-		
+		global $Config;
+		if(load::inc($Config->Assistants, $name)) return true;
+		else return false;
 	}
 	
 	/**
@@ -23,7 +39,9 @@ class load {
 	 * @param unknown_type $name
 	 */
 	public static function model($name) {
-		
+		global $Config;
+		if(load::inc($Config->Models, $name)) return true;
+		else return false;
 	}
 	
 	/**
@@ -32,7 +50,17 @@ class load {
 	 * @param unknown_type $injection
 	 */
 	public static function view($name, $injection = null) {
-		
+		global $Config;
+	}
+	
+	/**
+	 * Loads a controller object
+	 * @param unknown_type $name
+	 */
+	public static function controller($name) {
+		global $Config;
+		if(load::inc($Config->Controllers, $name)) return true;
+		else return false;
 	}
 }
 
