@@ -2,7 +2,8 @@
 class main {
 	
 	public function index() {
-		load::view("header");
+		$data['title'] = "This Title";
+		load::view("header", $data);
 		load::view("footer");
 	}
 	

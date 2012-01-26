@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>Test Header</title>
+		<title><?=$title;?></title>
 	</head>
 	<body>
 	

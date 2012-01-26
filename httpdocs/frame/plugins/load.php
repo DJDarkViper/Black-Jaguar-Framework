@@ -50,13 +50,15 @@ class load {
 	 * @param unknown_type $name
 	 * @param unknown_type $injection
 	 */
-	public static function view($name, $injection = null) {
+	public static function view($name, $injection = array()) {
 		global $Config;
 		$file = $Config->DocRoot."views/".$name.".php";
 		if(file_exists($file)) {
 			
-			if($injection != null) {
-				
+			if(is_array($injection)) {
+				foreach($injection as $k=>$v) {
+					$$k = $v;
+				}
 			}
 			
 			include($file);
