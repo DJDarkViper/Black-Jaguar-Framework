@@ -2,7 +2,8 @@
 class main {
 	
 	public function index() {
-		echo "this is the index";
+		load::view("header");
+		load::view("footer");
 	}
 	
 }

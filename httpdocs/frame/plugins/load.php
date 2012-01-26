@@ -1,6 +1,7 @@
 <?php
 class load {
 	
+	public static $views = array();
 	
 	public static function inc($dirs, $path) {
 		foreach($dirs as $dir) {
@@ -51,6 +52,16 @@ class load {
 	 */
 	public static function view($name, $injection = null) {
 		global $Config;
+		$file = $Config->DocRoot."views/".$name.".php";
+		if(file_exists($file)) {
+			
+			if($injection != null) {
+				
+			}
+			
+			include($file);
+		}
+		//load::$views[] = 
 	}
 	
 	/**
