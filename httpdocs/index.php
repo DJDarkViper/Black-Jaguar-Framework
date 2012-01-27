@@ -1,5 +1,5 @@
 <?php
-include($_SERVER['DOUCMENT_ROOT']."/config/manifest.php");
+include($_SERVER['DOCUMENT_ROOT']."/config/manifest.php");
 
 
 $uri = new uri();

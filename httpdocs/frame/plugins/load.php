@@ -4,6 +4,7 @@ class load {
 	public static $views = array();
 	
 	public static function inc($dirs, $path) {
+		global $Config;
 		foreach($dirs as $dir) {
 			$file = $Config->DocRoot.$dir.$path.".php";
 			if(file_exists($file)) {
