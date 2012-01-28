@@ -1,6 +1,6 @@
 <?php
 session_start();
-include($_SERVER['DOCUMENT_ROOT']."/config/manifest.php");
+include($_SERVER['DOCUMENT_ROOT']."/engine/manifest.php");
 
 
 
