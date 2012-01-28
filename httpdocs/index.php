@@ -1,6 +1,37 @@
 <?php
+session_start();
 include($_SERVER['DOCUMENT_ROOT']."/config/manifest.php");
 
+
+
+
+
+
+
+
+
+/*************/
+
+// Autoload
+foreach($autoload as $type=>$list) {
+	if(!empty($list)) {
+		switch($type) {
+			case "Models":
+				$load = "model";
+				break;
+			case "Assistants":
+				$load = "assistant";
+				break;
+			case "Plugins":
+				$load = "plugin";
+				break;
+		}
+		
+		foreach($list as $item) {
+			load::$load($item);
+		}
+	}
+}
 
 $uri = new uri();
 if($uri->isempty()) {
