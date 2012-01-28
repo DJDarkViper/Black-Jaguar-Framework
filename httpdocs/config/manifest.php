@@ -8,7 +8,8 @@ $includes = array(
 		"engine/plugins/uri",
 		"engine/plugins/load",
 		"engine/plugins/database",
-		"engine/assistants/html"
+		"engine/assistants/html",
+		"engine/assistants/input"
 );
 
 

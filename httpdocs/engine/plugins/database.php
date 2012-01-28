@@ -117,7 +117,7 @@ class DatabaseDriver {
 	}
 	
 	public function where($col, $clause) {
-		$this->where[] = "`$col` = `$clause`";
+		$this->where[] = "`$col` = '$clause'";
 		
 		$this->build_query();
 		return $this;
