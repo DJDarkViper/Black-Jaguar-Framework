@@ -5,11 +5,13 @@
 
 $includes = array(
 		"config/config",
+		"config/autoload",
 		"engine/plugins/uri",
 		"engine/plugins/load",
 		"engine/plugins/database",
 		"engine/assistants/html",
-		"engine/assistants/input"
+		"engine/assistants/input",
+		"engine/assistants/system"
 );
 
 
