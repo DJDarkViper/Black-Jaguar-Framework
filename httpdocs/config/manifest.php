@@ -5,9 +5,10 @@
 
 $includes = array(
 		"config/config",
-		"frame/plugins/uri",
-		"frame/plugins/load",
-		"frame/plugins/database"
+		"engine/plugins/uri",
+		"engine/plugins/load",
+		"engine/plugins/database",
+		"engine/assistants/html"
 );
 
 
