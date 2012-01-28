@@ -225,6 +225,9 @@ class DatabaseDriver {
 	// Executes the built query
 	public function exec() {
 		if($sql = @mysql_query($this->query)) {
+			
+			$this->flush();
+			
 			$this->rows = mysql_num_rows($sql);
 			$this->affected_rows = mysql_affected_rows();
 			
@@ -236,7 +239,7 @@ class DatabaseDriver {
 			$this->reset();
 			return $this;
 		} else {
-			die("<span style='color: red'>There was an error running your query:</span><br />". mysql_error());
+			die("<span style='color: red'>There was an error running your query:</span><br />". mysql_error() . "<hr /><pre>".$this->query."</pre>");
 		}
 	}
 	
@@ -301,24 +304,15 @@ class DatabaseDriver {
 		return $this->prev();
 	}
 	
-	// Resets the driver
+	// flush results
 	public function flush() {
 		
-		$this->select = null;
-		$this->from = array();
-		$this->where = array();
-		$this->join = array();
-		$this->set = array();
-		$this->orderby = null;
-		$this->limit = null;
-		$this->active_row = 0;
-		$this->query = null;
 		$this->results = null;
 		
 		return $this;
 	}
 	
-	// alias for flush()
+	// resets the driver
 	public function reset() {
 		$this->select = null;
 		$this->from = array();
