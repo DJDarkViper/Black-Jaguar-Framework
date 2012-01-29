@@ -56,7 +56,7 @@ class load {
 		$file = $Config->DocRoot."views/".$name.".php";
 		if(file_exists($file)) {
 			
-			if(is_array($injection)) {
+			if(is_array($injection) || is_object($injection)) {
 				foreach($injection as $k=>$v) {
 					$$k = $v;
 				}
