@@ -5,7 +5,7 @@ class uri {
 	public $segments 	= array();
 	public $controller 	= null;
 	public $method 		= null;
-	public $arguments 	= null;
+	public $arguments 	= array();
 	
 	function __construct() {
 		$this->uri = $_REQUEST['uri'];

@@ -45,7 +45,12 @@ if($uri->isempty()) {
 		$controller = new $uri->controller;
 	}
 	if($uri->method) {
-		$controller->{$uri->method}( (( count($uri->arguments)>0 )? $uri->attributes() : null ) );
+		if(method_exists($controller, $uri->method)) {
+			$controller->{$uri->method}( (( count($uri->arguments)>0 )? $uri->attributes() : null ) );
+		} else {
+			array_unshift($uri->arguments, $uri->method);
+			$controller->index( (( count($uri->arguments)>0 )? $uri->attributes() : null ) );
+		}
 	} else {
 		$controller->index();
 	}
