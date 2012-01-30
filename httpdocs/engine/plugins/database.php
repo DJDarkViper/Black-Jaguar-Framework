@@ -238,17 +238,24 @@ class DatabaseDriver {
 			
 			$this->flush();
 			
-			$this->rows = mysql_num_rows($sql);
+			if($this->mode == "select") $this->rows = mysql_num_rows($sql);
+			
 			$this->affected_rows = mysql_affected_rows();
 			
-			while($r = mysql_fetch_object($sql)) {
-				$this->results[] = $r;
+			if($this->mode == "select") {
+				while($r = mysql_fetch_object($sql)) {
+					$this->results[] = $r;
+				}
+			} else {
+				// insert and update modes dont fetch results
+				$this->results[] = true;
 			}
 			
 			$this->queries[] = $this->query;
 			$this->reset();
 			return $this;
 		} else {
+			$this->results[] = false;
 			die("<span style='color: red'>There was an error running your query:</span><br />". mysql_error() . "<hr /><pre>".$this->query."</pre>");
 		}
 	}
