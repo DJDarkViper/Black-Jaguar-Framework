@@ -166,13 +166,21 @@ class DatabaseDriver {
 		$this->orderby = $order;
 		
 		$this->build_query();
-		return this;
+		return $this;
 	}
 	
-	 // Orderby Alias
+	// Orderby Alias
 	public function order($col, $dir = null) {
 		$this->orderby($col, $dir);
 	}
+	
+	
+	public function limit($num) {
+		$this->limit = $num;
+		$this->build_query();
+		return $this;
+	}
+	
 	
 	public function build_query() {
 		$query = array();
@@ -195,6 +203,8 @@ class DatabaseDriver {
 				if($this->orderby != '')
 					$query[] = "ORDER BY " . $this->orderby;
 				
+				if($this->limit != null)
+					$query[] = "LIMIT ".$this->limit;
 				
 				break;
 			case "insert":
@@ -357,13 +367,13 @@ DatabaseDriver::Connect(array(
 		"Host"=>"localhost",
 		"Username"=>"root",
 		"Password"=>"",
-		"Database"=>"db_name"
+		"Database"=>"plz"
 	),
 	"live"=>array(
 		"Host"=>"localhost",
 		"Username"=>"root",
 		"Password"=>"",
-		"Database"=>"db_name"
+		"Database"=>"plz"
 	)
 ), ".dev");
 $db = new DatabaseDriver("mysql");
