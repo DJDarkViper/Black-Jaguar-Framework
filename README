@@ -12,11 +12,9 @@ Goals:
 - Config options are small in number, try to keep mostly as database settings and default controller
 - Only usage of controllers is manditory, everything else is purely optional
 - Code built into the system will be well documented with PHPDoc and JSDoc
-<<<<<<< HEAD
 - If using an IDE like Eclispe with deep autocompletion features, should be able to find and understand included methods and functions
 - If NOT using an IDE with autocompletion, should feature methods and functions that are easy to remember, and make sense when spoken a-loud
-=======
->>>>>>> bc217c9f3b899ea789bf08565a4677160fb261b2
+
 
 At Time of Writing Notes from Author:
 
