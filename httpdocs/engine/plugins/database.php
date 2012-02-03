@@ -123,6 +123,28 @@ class DatabaseDriver {
 		return $this;
 	}
 	
+	public function wherelike($col, $clause, $dir = "both") {
+		switch($dir) {
+			default:
+			case "both":
+				$clause = "%$clause%";
+				break;
+			case "left":
+				$clause = "%$clause";
+				break;
+			case "right":
+				$clause = "$clause%";
+				break;
+			case "strict":
+				// Do nothing, No Wild Cards
+				break;
+		}
+		$this->where[] = "`$col` LIKE '$clause'";
+	
+		$this->build_query();
+		return $this;
+	}
+	
 	public function join($table, $alias, $on_original, $on_compare, $type = "left") {
 		
 		switch($type) {
@@ -153,15 +175,15 @@ class DatabaseDriver {
 	
 	public function orderby($col, $dir = null) {
 		$data = explode(" ", $col);
-		if(count($data)>0) {
+		if(count($data)>1) {
 			$col = "`".$data[0]."` ".$data[1];
 		}
 		
 		$order = $col;
 		
-		if(trim($order) != "" && $dir == null) $dir = "ASC";
+		if(trim($order) != "" && $dir == null) $dir = " ASC";
 		
-		if($dir != null) $order .= "$dir";
+		if($dir != null) $order .= " $dir";
 		
 		$this->orderby = $order;
 		
@@ -371,16 +393,16 @@ class DatabaseDriver {
 
 DatabaseDriver::Connect(array(
 	"local"=>array(
-		"Host"=>"localhost",
+		"Host"=>"stonehenge",
 		"Username"=>"root",
-		"Password"=>"",
-		"Database"=>"plz"
+		"Password"=>"navpub",
+		"Database"=>"kyle"
 	),
 	"live"=>array(
 		"Host"=>"localhost",
 		"Username"=>"root",
 		"Password"=>"",
-		"Database"=>"plz"
+		"Database"=>"kyle"
 	)
-), ".dev");
+), ".nav");
 $db = new DatabaseDriver("mysql");
