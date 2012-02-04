@@ -391,18 +391,7 @@ class DatabaseDriver {
 	
 }
 
-DatabaseDriver::Connect(array(
-	"local"=>array(
-		"Host"=>"stonehenge",
-		"Username"=>"root",
-		"Password"=>"navpub",
-		"Database"=>"kyle"
-	),
-	"live"=>array(
-		"Host"=>"localhost",
-		"Username"=>"root",
-		"Password"=>"",
-		"Database"=>"kyle"
-	)
-), ".nav");
+if($Config->db->connect) {
+	DatabaseDriver::Connect($Config->db->config, $Config->db->condition);
+}
 $db = new DatabaseDriver("mysql");
