@@ -42,9 +42,11 @@ if($uri->isempty()) {
 	$controller = null;
 	if($uri->controller != null) {
 		load::controller($uri->controller);
+		$uri->controller = str_replace("-", "_", $uri->controller);
 		$controller = new $uri->controller;
 	}
 	if($uri->method) {
+		$uri->method = str_replace("-", "_", $uri->method);
 		if(method_exists($controller, $uri->method)) {
 			$controller->{$uri->method}( (( count($uri->arguments)>0 )? $uri->attributes() : null ) );
 		} else {
