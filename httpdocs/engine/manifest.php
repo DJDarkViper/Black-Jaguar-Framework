@@ -11,7 +11,8 @@ $includes = array(
 		"engine/plugins/database",
 		"engine/assistants/html",
 		"engine/assistants/input",
-		"engine/assistants/system"
+		"engine/assistants/system",
+		"engine/engine"
 );
 
 
