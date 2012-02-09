@@ -4,19 +4,25 @@ function request($key = null) {
 		foreach($_REQUEST as &$k) { $k = addslashes(trim($k)); }
 		return (object) $_REQUEST;
 	}
-	return addslashes(trim($_REQUEST[$key]));
+	if(isset($_REQUEST[$key]))
+		return addslashes(trim($_REQUEST[$key]));
+	else return false;
 }
 function post($key = null) {
 	if($key == null) {
 		foreach($_POST as &$k) { $k = addslashes(trim($k)); }
 		return (object) $_POST;
 	}
-	return addslashes(trim($_POST[$key]));
+	if(isset($_REQUEST[$key]))
+		return addslashes(trim($_POST[$key]));
+	else return false;
 }
 function get($key = null) {
 	if($key == null) {
 		foreach($_GET as &$k) { $k = addslashes(trim($k)); }
 		return (object) $_GET;
 	}
-	return addslashes(trim($_GET[$key]));
+	if(isset($_REQUEST[$key]))
+		return addslashes(trim($_GET[$key]));
+	else return false;
 }
