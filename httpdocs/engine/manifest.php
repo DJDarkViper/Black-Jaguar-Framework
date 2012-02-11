@@ -6,6 +6,7 @@
 $includes = array(
 		"config/config",
 		"config/autoload",
+		"engine/plugins/debug",
 		"engine/plugins/uri",
 		"engine/plugins/load",
 		"engine/plugins/database",
