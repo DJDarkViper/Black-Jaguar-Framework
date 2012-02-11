@@ -9,6 +9,7 @@ $includes = array(
 		"engine/plugins/uri",
 		"engine/plugins/load",
 		"engine/plugins/database",
+		"engine/plugins/session",
 		"engine/assistants/html",
 		"engine/assistants/input",
 		"engine/assistants/system",
