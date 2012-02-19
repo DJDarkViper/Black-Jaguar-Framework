@@ -11,6 +11,7 @@ $includes = array(
 		"engine/plugins/load",
 		"engine/plugins/database",
 		"engine/plugins/session",
+		"engine/plugins/email",
 		"engine/assistants/html",
 		"engine/assistants/input",
 		"engine/assistants/system",
