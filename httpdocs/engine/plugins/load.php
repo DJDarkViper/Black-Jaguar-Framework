@@ -52,8 +52,8 @@ class load {
 	 * @param unknown_type $injection
 	 */
 	public static function view($name, $injection = array()) {
-		global $Config;
-		$file = $Config->DocRoot."views/".$name.".php";
+		global $Config, $ApplicationFolder;
+		$file = $Config->DocRoot.$ApplicationFolder."/views/".$name.".php";
 		if(file_exists($file)) {
 			
 			if(is_array($injection) || is_object($injection)) {

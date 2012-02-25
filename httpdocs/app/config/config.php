@@ -39,21 +39,21 @@ $Config->db->config = array(		// Local and Live Connection Information
  * You are free to add more, the order matters (top obviusly higher priority) 
  **/
 $Config->Controllers = array(
-		"controllers/"
+		$ApplicationFolder."/controllers/"
 );
 $Config->Models = array(
-		"models/"
+		$ApplicationFolder."/models/"
 );
 $Config->Assistants = array(
-		"assistants/",
-		"frame/assistants/"
+		$ApplicationFolder."/assistants/",
+		$EngineFolder."/assistants/"
 );
 $Config->Plugins = array(
-		"plugins/",
-		"frame/plugins/"
+		$ApplicationFolder."/plugins/",
+		$EngineFolder."/plugins/"
 );
 $Config->Views = array(
-		"views/"
+		$ApplicationFolder."/views/"
 );
 
 

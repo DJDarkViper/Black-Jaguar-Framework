@@ -1,6 +1,27 @@
 <?php
 /*************/
 
+/**
+* Include Manifest
+*/
+$autoload = new stdClass();
+
+$includes = array(
+		$ApplicationFolder."/config/config",
+		$ApplicationFolder."/config/autoload",
+		$EngineFolder."/plugins/load"
+);
+// Loads the includes
+foreach($includes as $inc) {
+	include($_SERVER['DOCUMENT_ROOT'].$inc.".php");
+}
+
+
+
+// Required Plugins
+$autoload->Plugins[] = "uri";
+$autoload->Plugins[] = "database";
+
 // Autoload
 foreach($autoload as $type=>$list) {
 	if(!empty($list)) {
