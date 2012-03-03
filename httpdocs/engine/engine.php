@@ -9,7 +9,9 @@ $autoload = new stdClass();
 $includes = array(
 		$ApplicationFolder."/config/config",
 		$ApplicationFolder."/config/autoload",
-		$EngineFolder."/plugins/load"
+		$EngineFolder."/plugins/load",
+		$EngineFolder."/plguins/uri",
+		$EngineFolder."/plguins/database"
 );
 // Loads the includes
 foreach($includes as $inc) {
@@ -19,8 +21,8 @@ foreach($includes as $inc) {
 
 
 // Required Plugins
-$autoload->Plugins[] = "uri";
-$autoload->Plugins[] = "database";
+//$autoload->Plugins[] = "uri";
+//$autoload->Plugins[] = "database";
 
 // Autoload
 foreach($autoload as $type=>$list) {
