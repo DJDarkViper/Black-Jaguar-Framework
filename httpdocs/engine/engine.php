@@ -10,8 +10,8 @@ $includes = array(
 		$ApplicationFolder."/config/config",
 		$ApplicationFolder."/config/autoload",
 		$EngineFolder."/plugins/load",
-		$EngineFolder."/plguins/uri",
-		$EngineFolder."/plguins/database"
+		$EngineFolder."/plugins/uri",
+		$EngineFolder."/plugins/database"
 );
 // Loads the includes
 foreach($includes as $inc) {
