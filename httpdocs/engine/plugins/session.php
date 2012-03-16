@@ -1,6 +1,13 @@
 <?
 class Session {
 	
+	public static function kill($data) {
+		if(isset($_SESSION[$data])) {
+			unset($_SESSION[$data]);
+			return true;
+		}
+		return false;
+	}
 
 	public static function data($data, $set = null) {
 		if($set != null) {
