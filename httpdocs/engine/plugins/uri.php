@@ -13,7 +13,7 @@ class uri {
 	}
 	
 	public function segment($index) {
-		
+		return $this->segments[$index];
 	}
 	
 	public function attr($index) {
