@@ -10,11 +10,12 @@ class DatabaseDriver {
 	
 	private $mode; // select, insert, update, delete
 	private $select;
+	private $distinct = false;
 	private $from = array();
 	private $where = array();
 	private $join = array();
 	private $set = array();
-	private $orderby;
+	private $orderby = array();
 	private $limit;
 
 	private $driver;
@@ -45,6 +46,12 @@ class DatabaseDriver {
 		
 		$this->select = $cols;
 		
+		$this->build_query();
+		return $this;
+	}
+
+	public function distinct() {
+		$this->distinct = true;
 		$this->build_query();
 		return $this;
 	}
@@ -105,13 +112,13 @@ class DatabaseDriver {
 	public function set($data, $value = null, $escape = true) {
 		if(is_array($data)) {
 			foreach($data as $k=>$d) {
-				$this->set[] = (($escape == true) ? "`".$k."` = '".$d."'" : "`".$k."` = ".$d );
+				$this->set[] = (($escape == true) ? "`".$k."` = '".addslashes($d)."'" : "`".$k."` = ".addslashes($d) );
 			}
 			$this->build_query();
 			return $this;
 		}
 		
-		$this->set[] = (($escape == true) ? "`".$data."` = '".$value."'" : "`".$data."` = ".$value );
+		$this->set[] = (($escape == true) ? "`".$data."` = '".addslashes($value)."'" : "`".$data."` = ".addslashes($value) );
 		$this->build_query();
 		return $this;
 	}
@@ -185,7 +192,7 @@ class DatabaseDriver {
 		
 		if($dir != null) $order .= " $dir";
 		
-		$this->orderby = $order;
+		$this->orderby[] = $order;
 		
 		$this->build_query();
 		return $this;
@@ -211,7 +218,7 @@ class DatabaseDriver {
 			case "select":
 			default:
 				
-				$query[] = "SELECT ".$this->select;
+				$query[] = "SELECT".(($this->distinct)?" DISTINCT":"")." ".$this->select;
 		
 				if(count($this->from) >= 1)
 					$query[] = "FROM ".implode(" AND ", $this->from);
@@ -222,8 +229,8 @@ class DatabaseDriver {
 				if(count($this->where) >= 1)
 					$query[] = "WHERE " . implode(" AND ", $this->where);
 					
-				if($this->orderby != '')
-					$query[] = "ORDER BY " . $this->orderby;
+				if(count($this->orderby) >= 1)
+					$query[] = "ORDER BY " . implode(", ", $this->orderby);
 				
 				if($this->limit != null)
 					$query[] = "LIMIT ".$this->limit;
@@ -371,6 +378,10 @@ class DatabaseDriver {
 	
 	public function numrows() {
 		return $this->rows;
+	}
+
+	public function affectedRows() {
+		return $this->affected_rows;
 	}
 	
 	public function count_queries() {
