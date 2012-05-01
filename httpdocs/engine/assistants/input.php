@@ -8,7 +8,7 @@ function request($key = null) {
 		return addslashes(trim($_REQUEST[$key]));
 	else return false;
 }
-function post($key = null) {
+function post($key = null, $index = -1) {
 	if($key == null) {
 		foreach($_POST as &$k) { 
 			if(is_array($k) || is_object($k)) {										// if an array, we must cleanse each node
@@ -23,8 +23,8 @@ function post($key = null) {
 		if(is_array($_POST[$key]) || is_object($_POST[$key])) { // cleanse an array
 			$ret = $_POST[$key];
 			foreach($ret as &$r) $r = addslashes(trim($r));
-			return $ret;
-		} else return addslashes(trim($_POST[$key])); // other value
+			return (($index >= 0)? $ret[$index] : $ret );
+		} else return addslashes(trim( $_POST[$key] )); // other value
 	else return false;
 }
 function get($key = null) {
