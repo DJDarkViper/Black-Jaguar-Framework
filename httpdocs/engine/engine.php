@@ -71,8 +71,8 @@ if($uri->isempty()) {
 } else {
 	$controller = null;
 	if($uri->controller != null) {
-		load::controller($uri->controller);
 		$uri->controller = str_replace("-", "_", $uri->controller);
+		load::controller($uri->controller);
 		$controller = new $uri->controller;
 	}
 	if($uri->method) {
