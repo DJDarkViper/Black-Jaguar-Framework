@@ -56,6 +56,9 @@ $Config->Views = array(
 		$ApplicationFolder."/views/"
 );
 
+$Config->SecurePages = array(
+	
+);
 
 /**
 * Nevermind These
