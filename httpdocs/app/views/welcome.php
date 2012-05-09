@@ -54,7 +54,7 @@
 			<br /><br />Sincerely,<br /><br /><br /><br />Kyle</p>
 			
 			<div id="version">
-				v.0.8.0
+				v.0.9.5
 			</div>
 		</div>
 	</body>
