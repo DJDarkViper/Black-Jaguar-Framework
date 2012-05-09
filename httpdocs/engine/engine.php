@@ -1,11 +1,12 @@
 <?php
-/*************/
-
 /**
 * Include Manifest
 */
 $autoload = new stdClass();
 $route = array();
+
+include($_SERVER['DOCUMENT_ROOT']."/engine/Configuration.php");
+$Config = new Configuration();
 
 $includes = array(
 		$ApplicationFolder."/config/config",
@@ -13,7 +14,10 @@ $includes = array(
 		$ApplicationFolder."/config/router",
 		$EngineFolder."/plugins/load",
 		$EngineFolder."/plugins/uri",
-		$EngineFolder."/plugins/database"
+		$EngineFolder."/plugins/database",
+		$EngineFolder."/plugins/point",
+		$EngineFolder."/plugins/upload",
+		$EngineFolder."/plugins/paginate"
 );
 // Loads the includes
 foreach($includes as $inc) {
@@ -47,7 +51,25 @@ foreach($autoload as $type=>$list) {
 	}
 }
 
+
 $uri = new uri();
+/**** Secure Force *****/
+
+$HTTP_PORT = intval($_SERVER['SERVER_PORT']);
+
+// boolean, SSL certs wont exist on local testing machines so uses the DB Condition switcher here too
+$https_required = ((!preg_match("/".$Config->db->condition."/", $_SERVER['HTTP_HOST']))? in_array($uri->uri, $Config->SecurePages) : false );
+
+if ($https_required && $HTTP_PORT !== 443){
+	header('location: https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
+	exit;
+}else if(! $https_required && $HTTP_PORT === 443){
+	header('location: http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
+	exit;
+}
+
+// and here we go
+
 
 // need to setup router here
 foreach($route as $routeFrom=>$routeTo) {

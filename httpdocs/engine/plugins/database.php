@@ -123,8 +123,9 @@ class DatabaseDriver {
 		return $this;
 	}
 	
-	public function where($col, $clause) {
-		$this->where[] = "`$col` = '$clause'";
+	public function where($col, $clause, $override = "=", $escape = true) {
+		//$this->where[] = "`$col` $override '$clause'";
+		$this->where[] = "`$col` $override ".(($escape)?"'$clause'":"$clause");
 		
 		$this->build_query();
 		return $this;
