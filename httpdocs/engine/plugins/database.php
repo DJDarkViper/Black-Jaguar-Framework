@@ -13,6 +13,7 @@ class DatabaseDriver {
 	private $distinct = false;
 	private $from = array();
 	private $where = array();
+	private $orwhere = array();
 	private $join = array();
 	private $set = array();
 	private $orderby = array();
@@ -26,6 +27,7 @@ class DatabaseDriver {
 	public $results;
 	public $rows;
 	public $affected_rows;
+	public $insert_id;
 	
 	public $queries = array();
 	
@@ -131,7 +133,14 @@ class DatabaseDriver {
 		return $this;
 	}
 	
-	public function wherelike($col, $clause, $dir = "both") {
+	public function orwhere($col, $clause, $override = "=", $escape = true) {
+		$this->where[] = "[OR]`$col` $override ".(($escape)?"'$clause'":"$clause");
+		
+		$this->build_query();
+		return $this;
+	}
+	
+public function wherelike($col, $clause, $dir = "both") {
 		switch($dir) {
 			default:
 			case "both":
@@ -148,6 +157,28 @@ class DatabaseDriver {
 				break;
 		}
 		$this->where[] = "`$col` LIKE '$clause'";
+	
+		$this->build_query();
+		return $this;
+	}
+	
+	public function orwherelike($col, $clause, $dir = "both") {
+		switch($dir) {
+			default:
+			case "both":
+				$clause = "%$clause%";
+				break;
+			case "left":
+				$clause = "%$clause";
+				break;
+			case "right":
+				$clause = "$clause%";
+				break;
+			case "strict":
+				// Do nothing, No Wild Cards
+				break;
+		}
+		$this->where[] = "[OR]`$col` LIKE '$clause'";
 	
 		$this->build_query();
 		return $this;
@@ -177,6 +208,16 @@ class DatabaseDriver {
 		
 		$this->join[] = "$type `$table` $alias $on";
 	
+		$this->build_query();
+		return $this;
+	}
+	
+	/**
+	 * Orderby Override, allows complete free text for orderby clause
+	 * @param string $str
+	 */
+	public function orderby_override($str) {
+		$this->orderby[] = $str;
 		$this->build_query();
 		return $this;
 	}
@@ -229,7 +270,7 @@ class DatabaseDriver {
 				
 				if(count($this->where) >= 1)
 					$query[] = "WHERE " . implode(" AND ", $this->where);
-					
+				
 				if(count($this->orderby) >= 1)
 					$query[] = "ORDER BY " . implode(", ", $this->orderby);
 				
@@ -238,18 +279,18 @@ class DatabaseDriver {
 				
 				break;
 			case "insert":
-				$query[] = "INSERT INTO " .$this->from[0]. " SET";
+				$query[] = "INSERT INTO " .((isset($this->from[0]))?$this->from[0]:""). " SET";
 				$query[] = implode(", ", $this->set);
-				
+
 				break;
 			case "delete":
-				$query[] = "DELETE FROM ".$this->from[0];
+				$query[] = "DELETE FROM ".((isset($this->from[0]))?$this->from[0]:"");
 				if(count($this->where) >= 1)
 					$query[] = "WHERE " . implode(" AND ", $this->where);
 					
 				break;
 			case "update":
-				$query[] = "UPDATE " .$this->from[0]. " SET" ;
+				$query[] = "UPDATE " .((isset($this->from[0]))?$this->from[0]:""). " SET" ;
 				$query[] = implode(", ", $this->set);
 				if(count($this->where) >= 1)
 					$query[] = "WHERE " . implode(" AND ", $this->where);
@@ -258,14 +299,15 @@ class DatabaseDriver {
 		
 	
 		$this->query = implode(" ", $query);
+		$this->query = preg_replace("/AND \[OR\]/", "OR ", $this->query); // added for makeshift OR clause
 		
 		return $this;
 	}
 	
 	// Executes the built query
 	public function exec() {
+		
 		if($sql = @mysql_query($this->query)) {
-			
 			$this->flush();
 			
 			if($this->mode == "select") $this->rows = mysql_num_rows($sql);
@@ -280,6 +322,7 @@ class DatabaseDriver {
 				// insert and update modes dont fetch results
 				$this->results[] = true;
 			}
+			if($this->mode == "insert") $this->insert_id = mysql_insert_id();
 			
 			$this->queries[] = $this->query;
 			$this->reset();
@@ -393,6 +436,9 @@ class DatabaseDriver {
 		return $this->queries[$index];
 	}
 	
+	public function insertID() {
+		return $this->insert_id;
+	}
 	
 	public static function Connect($settings, $local_condition = ".dev") {
 		$env = ( ( preg_match( "/".str_replace('.', '\.', $local_condition."/"), $_SERVER['HTTP_HOST'] ) ) ? "local" : "live" );

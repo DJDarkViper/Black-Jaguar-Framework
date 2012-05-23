@@ -50,7 +50,7 @@ class Paginate {
 		switch($mode) {
 			case self::RENDER_ARRAY:
 				
-				for($i = 1; $i <= (round( $this->getRecordCount()/$this->getPerPageCount() ) ); $i++) {
+				for($i = 1; $i <= (ceil( $this->getRecordCount()/$this->getPerPageCount() ) ); $i++) {
 					$rend[] = new PaginationPage($i, $this->parse($i));
 				}
 				

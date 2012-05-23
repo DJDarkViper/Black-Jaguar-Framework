@@ -16,7 +16,7 @@ class Upload {
 	}
 	
 	public function parse($filearr) {
-		var_dump($filearr);
+		//var_dump($filearr);
 		$arr = (object)$filearr;
 		$this->name = $arr->name;
 		$this->tmpName = $arr->tmp_name;
@@ -94,7 +94,7 @@ class Upload {
 			// check each directory exists
 			foreach($folders as $folder) {
 				if(trim($folder) != '') {
-					if(!chdir($folder)) { // failed to get to the folder, make it
+					if(!@chdir($folder)) { // failed to get to the folder, make it
 						mkdir($folder);
 						chmod($folder, 0777);
 						if(!chdir($folder)) {
@@ -118,7 +118,24 @@ class Upload {
 		$files = array();
 		
 		if($index == null) foreach($_FILES as $k=>$file) $files[$k] = $file;
-		else return $_FILES[$index];
+		else return ((isset($_FILES[$index]))?$_FILES[$index]:false);
+		
+		return $files;
+	}
+	
+	public static function getBatchFiles($name) {
+		$files = array();
+		
+		foreach($_FILES[$name]['name'] as $k=>$v) {
+			$file = array();
+			$file['name'] = $_FILES[$name]['name'][$k];
+			$file['type'] = $_FILES[$name]['type'][$k];
+			$file['tmp_name'] = $_FILES[$name]['tmp_name'][$k];
+			$file['error'] = $_FILES[$name]['error'][$k];
+			$file['size'] = $_FILES[$name]['size'][$k];
+			
+			$files[] = new Upload($file);
+		}
 		
 		return $files;
 	}
