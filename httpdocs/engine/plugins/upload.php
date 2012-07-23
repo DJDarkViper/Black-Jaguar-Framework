@@ -1,5 +1,14 @@
 <?
+class ImageManipulationMeta {
+	const RESIZE	= 1;
+	const RESAMPLE	= 2;
+	
+	public $type	= null;
+}
 class Upload {
+	
+	const MODE_DEFAULT			= 1;
+	const MODE_MANIPULATE		= 2;
 	
 	public $name 				= null;
 	public $tmpName				= null;
@@ -11,8 +20,13 @@ class Upload {
 	public $finalPath 			= "/";
 	public $force				= false;
 	
+	private $mode				= null;
+	private $manipulateMeta		= null;
+	
 	public function __construct($filearr = null) {
 		if($filearr != null) $this->parse($filearr);
+		
+		$this->mode = self::MODE_DEFAULT;
 	}
 	
 	public function parse($filearr) {
@@ -36,6 +50,20 @@ class Upload {
 	
 	public function setName($str) { $this->fileName = $str; }
 	public function setPath($str) { $this->finalPath = $str; }
+	
+	
+	
+	// manipulation 
+	public function resize($width, $height, $quality = 100, $keepRatio = false, $force = false) {
+		$this->mode = self::MODE_MANIPULATE;
+		$this->manipulateMeta = new ImageManipulationMeta();
+		$this->manipulateMeta->type = ImageManipulationMeta::RESIZE;
+		$this->manipulateMeta->width = $width;
+		$this->manipulateMeta->height = $height;
+		$this->manipulateMeta->quality = $quality;
+		$this->manipulateMeta->keepRatio = $keepRatio;
+		$this->manipulateMeta->forceSize = $force;		
+	}
 	
 	
 	
@@ -110,8 +138,51 @@ class Upload {
 			//echo $currentPath;
 		}
 		
+		switch($this->mode) {
+			case self::MODE_DEFAULT:
+				return move_uploaded_file($this->getTmpName(), $_SERVER['DOCUMENT_ROOT']."/".$this->getPath().$this->getFileName());
+				break;
+			case self::MODE_MANIPULATE:
+				
+				$image = new Imagick( $this->getTmpName() );
+				switch($this->manipulateMeta->type) {
+					
+					case ImageManipulationMeta::RESIZE:
+						
+						$image->setcompressionquality($this->manipulateMeta->quality);
+						
+						// if forceSize is off (as in only when the image is larger) and if either width or height is larger than the requested width and height
+						if(
+							(
+								$this->manipulateMeta->forceSize == false && 
+								(
+									$image->getimagewidth() > $this->manipulateMeta->width ||
+									$image->getimageheight() > $this->manipulateMeta->height
+								)
+							) ||
+							(
+								$this->manipulateMeta->forceSize == true
+							)
+						) {
+							$image->resizeimage($this->manipulateMeta->width, $this->manipulateMeta->height, Imagick::FILTER_GAUSSIAN, 0.1, $this->manipulateMeta->keepRatio);
+						}
+						
+						
+						
+						break;
+					case ImageManipulationMeta::RESAMPLE:
+						
+						break;
+					
+					
+				}
+				
+				return $image->writeimage( $_SERVER['DOCUMENT_ROOT']."/".$this->getPath().$this->getFileName() );
+				
+				
+				break;
+		}
 		
-		return move_uploaded_file($this->getTmpName(), $_SERVER['DOCUMENT_ROOT']."/".$this->getPath().$this->getFileName());
 	}
 	
 	public static function getFiles($index = null) {

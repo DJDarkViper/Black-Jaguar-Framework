@@ -1,7 +1,8 @@
 <?php
+$autoload->Bases = array('BasePage');
 
 $autoload->Models = array();
 
-$autoload->Assistants = array('html', 'input', 'system');
+$autoload->Assistants = array();
 
-$autoload->Plugins = array('debug', 'database', 'session', 'email');
+$autoload->Plugins = array('SocialMedia', 'Gravatar');

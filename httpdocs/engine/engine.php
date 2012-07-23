@@ -2,13 +2,55 @@
 /**
 * Include Manifest
 */
+
 $autoload = new stdClass();
 $route = array();
 
 include($_SERVER['DOCUMENT_ROOT']."/engine/Configuration.php");
+Configuration::checkInstall();
 $Config = new Configuration();
 
+
+$Config->Bases = array(
+		$ApplicationFolder."/bases/",
+		$EngineFolder."/bases/",
+);
+$Config->Controllers = array(
+		$ApplicationFolder."/controllers/",
+		$EngineFolder."/controllers/",
+);
+$Config->Models = array(
+		$ApplicationFolder."/models/",
+		$EngineFolder."/models/",
+);
+$Config->Assistants = array(
+		$ApplicationFolder."/assistants/",
+		$EngineFolder."/assistants/"
+);
+$Config->Plugins = array(
+		$ApplicationFolder."/plugins/",
+		$EngineFolder."/plugins/"
+);
+$Config->Views = array(
+		$ApplicationFolder."/views/",
+		$EngineFolder."/views/"
+);
+
+
+/**
+ * Nevermind These
+ **/
+$Config->DocRoot = $_SERVER['DOCUMENT_ROOT']."/";
+$Config->Root = "http://".$_SERVER['HTTP_HOST']."/";
+
+
+// REQUIRED FILES MANIFEST
 $includes = array(
+		$EngineFolder."/plugins/Consts",
+		$EngineFolder."/models/Settings",
+		$EngineFolder."/bases/BaseModel",
+		$EngineFolder."/bases/BaseController",
+		$EngineFolder."/bases/BasePage",
 		$ApplicationFolder."/config/config",
 		$ApplicationFolder."/config/autoload",
 		$ApplicationFolder."/config/router",
@@ -17,7 +59,18 @@ $includes = array(
 		$EngineFolder."/plugins/database",
 		$EngineFolder."/plugins/point",
 		$EngineFolder."/plugins/upload",
-		$EngineFolder."/plugins/paginate"
+		$EngineFolder."/plugins/paginate",
+		$EngineFolder."/plugins/HelloDolly",
+		$EngineFolder."/assistants/html",
+		$EngineFolder."/assistants/input",
+		$EngineFolder."/assistants/system",
+		$EngineFolder."/models/CMS",
+		$EngineFolder."/models/Domain",
+		$EngineFolder."/plugins/debug",
+		$EngineFolder."/plugins/session",
+		$EngineFolder."/plugins/Tools",
+		$EngineFolder."/plugins/Message",
+		$EngineFolder."/models/Account"
 );
 // Loads the includes
 foreach($includes as $inc) {
@@ -34,6 +87,9 @@ foreach($includes as $inc) {
 foreach($autoload as $type=>$list) {
 	if(!empty($list)) {
 		switch($type) {
+			case "Bases":
+				$load = "base";
+				break;
 			case "Models":
 				$load = "model";
 				break;
@@ -95,11 +151,23 @@ if($uri->isempty()) {
 	if($uri->controller != null) {
 		$uri->controller = str_replace("-", "_", $uri->controller);
 		load::controller($uri->controller);
-		$controller = new $uri->controller;
+		if(class_exists($uri->controller))
+			$controller = new $uri->controller;
+		else {
+			// reroute the controller to a basic CMS page
+			load::controller("cmsbasic");
+			$controller = new cmsBasic();
+		}
+		
 	}
 	if($uri->method) {
 		$uri->method = str_replace("-", "_", $uri->method);
-		if(method_exists($controller, $uri->method)) {
+		if(get_class($controller) == "cmsBasic") {
+			// because cmsBasic has NO built in methods, we must fake it for nested content
+			array_unshift($uri->arguments, $uri->method);
+			$controller->{$uri->method}( (( count($uri->arguments)>0 )? $uri->attributes() : null ) );
+
+		} else if(method_exists($controller, $uri->method)) {
 			$controller->{$uri->method}( (( count($uri->arguments)>0 )? $uri->attributes() : null ) );
 		} else {
 			array_unshift($uri->arguments, $uri->method);

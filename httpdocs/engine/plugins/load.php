@@ -26,6 +26,16 @@ class load {
 	}
 	
 	/**
+	 * Loads a file that contains a Base (a class that can be globally extended)
+	 * @param unknown_type $name
+	 */
+	public static function base($name) {
+		global $Config;
+		if(load::inc($Config->Bases, $name)) return true;
+		else return false;
+	}
+	
+	/**
 	 * Loads a file that contains a series of one or more non-classed globally accessible assisant/helper functions
 	 * @param unknown_type $name
 	 */
@@ -53,18 +63,22 @@ class load {
 	 */
 	public static function view($name, $injection = array()) {
 		global $Config, $ApplicationFolder;
-		$file = $Config->DocRoot.$ApplicationFolder."/views/".$name.".php";
-		if(file_exists($file)) {
-			
-			if(is_array($injection) || is_object($injection)) {
-				foreach($injection as $k=>$v) {
-					$$k = $v;
+		foreach($Config->Views as $dir) {
+			$file = $Config->DocRoot.$dir.$name.".php";
+			if(file_exists($file)) {
+				
+				if(is_array($injection) || is_object($injection)) {
+					foreach($injection as $k=>$v) {
+						$$k = $v;
+					}
 				}
+				
+				include($file);
+				
+				return true;
+				
 			}
-			
-			include($file);
 		}
-		//load::$views[] = 
 	}
 	
 	/**

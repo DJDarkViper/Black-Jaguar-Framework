@@ -1,4 +1,52 @@
 <?
+
+// Return pagination HTML.
+function pagination( $pages, $page, $linkPrefix = NULL, $linkSuffix = NULL ) {
+	
+	if( $pages == 0 ) return;
+	
+	// Begin Pagination
+	$content = '<div class="pagination">';
+	
+	// Check if we should display a 'Previous' Button.
+	if( $pages > 1 && $page > 1 && $page <= $pages ) {
+	
+		// Show previous link.
+		$content .= '<a class="pg_off" href="'. $linkPrefix . ( $page - 1 ) . $linkSuffix .'">&laquo; Previous</a> ';
+			
+	}
+		
+	// Figure out what numbers to display.
+	// Ensure we are on a valid page:
+	$startingNumber = ( $page <= $pages ) ? max( 1, $page - 2 ) : 1;
+	$endingNumber = min( $startingNumber + 4, $pages );
+
+	$count = $startingNumber;
+	while( $count <= $endingNumber ) {
+
+		// Output the pages.
+		$onOff = ( $count == $page ) ? 'pg_on' : 'pg_off';
+		$content .= '<a class="'. $onOff .'" href="'. $linkPrefix . $count . $linkSuffix .'">'. $count .'</a> ';
+
+		// Increment count;
+		$count++;
+	}
+	
+	// Check if we should display a 'Next' Button.
+	if( $pages > $page ) {
+
+		// Show next link.
+		$content .= '<a class="pg_off" href="'. $linkPrefix . ( $page + 1 ) . $linkSuffix .'">Next &raquo;</a> ';
+	
+	}
+	
+	// End Pagination
+	$content .= '</div>';
+	
+	return $content;
+
+}
+
 class PaginationPage {
 	public $page = 0;
 	public $uri = "";
@@ -23,19 +71,23 @@ class Paginate {
 	public $records = 0;
 	public $perPage = 1;
 	public $uriTemplate = "[#]";
+	public $currentPage = 1;
 	
-	public function __construct($records = null, $perPage = null, $uriTemplate = null) {
+	public function __construct($records = null, $perPage = null, $uriTemplate = null, $currentPage = null) {
 		if($records != null) $this->setRecordCount($records);
 		if($perPage != null) $this->setPerPageCount($perPage);
 		if($uriTemplate != null) $this->setUriTemplate($uriTemplate);
+		if($currentPage != null) $this->setCurrentPage($currentPage);
 	}
 	
 	public function setRecordCount($int) { $this->records = $int; return $this; }
 	public function setPerPageCount($int) { $this->perPage = $int; return $this; }
 	public function setUriTemplate($str) { $this->uriTemplate = $str; return $this; }
+	public function setCurrentPage($int) { $this->currentPage = $int; return $this; }
 	public function getRecordCount() { return $this->records; }
 	public function getPerPageCount() { return $this->perPage; }
 	public function getUriTemplate() { return $this->uriTemplate; }
+	public function getCurrentPage() { return $this->currentPage; }
 	
 	public function parse($page) {
 		return str_replace(
@@ -64,9 +116,9 @@ class Paginate {
 			case self::RENDER_HTML:
 				
 				$arr = $this->render();
-				$rend = "";
-				foreach($arr as $p) $rend .= "<a class='pagination-page' href='".$p->getUri()."'>".$p->getPage()."</a> ";
-				
+				$rend = "<div class='pagination'>";
+				foreach($arr as $p) $rend .= "<a class='pagination-page ".(($p->getPage() == $this->getCurrentPage())?"active":null)."' href='".$p->getUri()."'>".$p->getPage()."</a> ";
+				$rend .= "</div>";
 				break;
 		}
 		
